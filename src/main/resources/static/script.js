@@ -35,6 +35,13 @@ function onLogoutSubmit(event) {
   loginCheck();
 }
 
+function getCsrfToken() {
+  return document.cookie
+      .split("; ")
+      .find(row => row.startsWith("XSRF-TOKEN="))
+      ?.split("=")[1];
+}
+
 function onBlogSubmit(event) {
   const data = {"title": event.target[0].value, "body": event.target[1].value};
   event.preventDefault();
@@ -42,6 +49,7 @@ function onBlogSubmit(event) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "X-XSRF-Token": getCsrfToken()
     },
     body: JSON.stringify(data),
   })
