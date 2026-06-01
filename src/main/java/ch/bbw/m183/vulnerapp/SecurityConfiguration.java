@@ -28,8 +28,13 @@ public class SecurityConfiguration {
     {
         return username -> userRepository
                 .findById(username)
-                .map(entity -> new User(entity.getUsername(), entity.getPassword(), List.of()))
-                .orElseThrow(() -> new UsernameNotFoundException("There is no username like that"));
+                .map(entity -> User.builder()
+                        .username(entity.getUsername())
+                        .password(entity.getPassword())
+                        .authorities(entity.getRoles())
+                        .build())
+                .orElseThrow(() -> new UsernameNotFoundException("Username was not found!!!!"));
+
     }
 
     @Bean
@@ -50,6 +55,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(HttpMethod.GET, "/api/blog")
                                 .permitAll()
+                                .requestMatchers("/api/admin/**")
+                                .hasRole("ADMIN")
                                 .requestMatchers("/api/**")
                                 .authenticated()
                                 .anyRequest()

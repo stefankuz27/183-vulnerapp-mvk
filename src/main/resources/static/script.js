@@ -76,12 +76,15 @@ function fetchBlogs() {
 
 function renderBlogs(blogs) {
   const blogDiv = document.getElementById("blog-container");
-  blogDiv.innerHTML = "" // clear
-  for (const blog of blogs) {
-    blogDiv.innerHTML += `<h2>${blog.title}</h2>
-            <p>${blog.createdAt}</p>
-            <p>${blog.body}</p>`;
-  }
+   blogDiv.innerHTML = ""; // clear
+    blogs.forEach(blog => {
+        const h2 = document.createElement("h2");
+        h2.textContent = blog.title;
+        const p = document.createElement("p");
+        p.textContent = blog.body;
+        blogDiv.appendChild(h2);
+        blogDiv.appendChild(p);
+    });
 }
 
 function showDevError(message) {

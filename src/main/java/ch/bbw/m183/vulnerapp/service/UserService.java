@@ -20,16 +20,6 @@ public class UserService {
 
 	private final EntityManager entityManager;
 
-	public UserEntity whoami(String username, String password) {
-		// native queries are more performant!!1 :P
-		var user = (UserEntity) entityManager.createNativeQuery("SELECT * from users where username='" + username + "'", UserEntity.class)
-			.getSingleResult();
-		if (password.equals(user.getPassword())) {
-			return user;
-		}
-		throw new InvalidPasswordException("invalid password for user " + user.getUsername());
-	}
-
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@StandardException
 	public static class InvalidPasswordException extends RuntimeException {

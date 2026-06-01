@@ -1,12 +1,14 @@
 package ch.bbw.m183.vulnerapp.datamodel;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,12 +18,26 @@ import lombok.experimental.Accessors;
 public class UserEntity {
 
 	@Id
-	String username;
+	@NotBlank
+	@Size(min = 3, max = 50)
+	private String username;
 
 	@Column
-	String fullname;
+	@NotBlank
+	private String fullname;
 
 	@Column
-	String password;
+	@JsonIgnore
+	@Size(min = 8, message = "Das Passwort muss mindestens 8 Zeichen lang sein.")
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).*$",
+			message = "Das Passwort muss mindestens eine Zahl, einen Gross-, einen Kleinbuchstaben und ein Sonderzeichen enthalten.")
+	private String password;
 
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "user_roles",
+			joinColumns = @JoinColumn(name = "username"),
+			inverseJoinColumns = @JoinColumn(name = "role_id")
+	)
+	private Set<RoleEntity> roles;
 }
