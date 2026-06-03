@@ -5,7 +5,6 @@ import java.util.stream.Stream;
 
 import ch.bbw.m183.vulnerapp.datamodel.BlogEntity;
 import ch.bbw.m183.vulnerapp.repository.BlogRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @Transactional
@@ -26,7 +24,7 @@ public class BlogService {
 		return blogRepository.findAll(pageable);
 	}
 
-	public UUID createBlog(@Valid @RequestBody BlogEntity blog) {
+	public UUID createBlog(BlogEntity blog) {
 		blog.setId(UUID.randomUUID());
 		return blogRepository.save(blog)
 				.getId();

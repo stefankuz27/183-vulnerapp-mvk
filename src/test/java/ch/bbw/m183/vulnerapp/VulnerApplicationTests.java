@@ -2,8 +2,9 @@ package ch.bbw.m183.vulnerapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -51,6 +52,15 @@ class VulnerApplicationTests {
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue("{\"title\":\"Test\",\"body\":\"Test body\"}")
 				.exchange().expectStatus().isOk();
+	}
+
+	@Test
+	@WithMockUser(username = "fuu", roles = "USER")
+	void blogPostDeniedForUserWithoutCsrf() {
+		webTestClient.post().uri("/api/blog")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue("{\"title\":\"Test\",\"body\":\"Test body\"}")
+				.exchange().expectStatus().isForbidden();
 	}
 
 	@Test

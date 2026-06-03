@@ -1,6 +1,6 @@
 package ch.bbw.m183.vulnerapp.datamodel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -27,7 +27,8 @@ public class UserEntity {
 	private String fullname;
 
 	@Column
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@NotBlank
 	@Size(min = 8, message = "Das Passwort muss mindestens 8 Zeichen lang sein.")
 	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).*$",
 			message = "Das Passwort muss mindestens eine Zahl, einen Gross-, einen Kleinbuchstaben und ein Sonderzeichen enthalten.")
